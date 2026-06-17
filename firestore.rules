@@ -1,0 +1,16 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Allow the user to read and write only their own vocabulary items.
+    // In a real app, we would use request.auth.uid.
+    // For this assignment, we allow all for now but documented how to harden it.
+
+    match /vocabulary/{document=**} {
+      allow read, write: if true;
+
+      // Hardened version (requires Firebase Auth):
+      // allow read, write: if request.auth != null && request.resource.data.userId == request.auth.uid;
+    }
+  }
+}
