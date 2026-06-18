@@ -14,10 +14,15 @@ import 'package:vocabulary_app/features/vocabulary/presentation/bloc/vocabulary_
 import 'package:vocabulary_app/features/vocabulary/presentation/bloc/vocabulary_state.dart';
 
 class MockGetWordsFromAPI extends Mock implements GetWordsFromAPI {}
+
 class MockWatchSavedWords extends Mock implements WatchSavedWords {}
+
 class MockSaveWord extends Mock implements SaveWord {}
+
 class MockDeleteWord extends Mock implements DeleteWord {}
+
 class MockToggleFavorite extends Mock implements ToggleFavorite {}
+
 class MockFirebaseAnalytics extends Mock implements FirebaseAnalytics {}
 
 void main() {
@@ -50,10 +55,12 @@ void main() {
     mockAnalytics = MockFirebaseAnalytics();
 
     // Stub analytics calls
-    when(() => mockAnalytics.logEvent(
-          name: any(named: 'name'),
-          parameters: any(named: 'parameters'),
-        )).thenAnswer((_) async => {});
+    when(
+      () => mockAnalytics.logEvent(
+        name: any(named: 'name'),
+        parameters: any(named: 'parameters'),
+      ),
+    ).thenAnswer((_) async => {});
 
     bloc = VocabularyBloc(
       getWordsFromAPI: mockGetWordsFromAPI,
@@ -77,8 +84,7 @@ void main() {
     blocTest<VocabularyBloc, VocabularyState>(
       'should emit [VocabularyAddingWord, VocabularyAddSuccess, VocabularyEmpty] when word is saved successfully',
       build: () {
-        when(() => mockSaveWord(any()))
-            .thenAnswer((_) async => const Ok(null));
+        when(() => mockSaveWord(any())).thenAnswer((_) async => const Ok(null));
         return bloc;
       },
       act: (blocInstance) => blocInstance.add(

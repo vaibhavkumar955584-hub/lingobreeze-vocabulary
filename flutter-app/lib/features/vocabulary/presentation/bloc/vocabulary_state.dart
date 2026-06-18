@@ -21,13 +21,13 @@ abstract class VocabularyState extends Equatable {
 
   @override
   List<Object?> get props => [
-        savedWords,
-        filteredWords,
-        apiWords,
-        errorMessage,
-        searchQuery,
-        sortType,
-      ];
+    savedWords,
+    filteredWords,
+    apiWords,
+    errorMessage,
+    searchQuery,
+    sortType,
+  ];
 }
 
 enum VocabularySortType { newest, oldest, alphabetical }
@@ -55,9 +55,7 @@ class VocabularyLoaded extends VocabularyState {
 }
 
 class VocabularyEmpty extends VocabularyState {
-  const VocabularyEmpty({
-    super.apiWords,
-  });
+  const VocabularyEmpty({super.apiWords});
 }
 
 class VocabularyError extends VocabularyState {

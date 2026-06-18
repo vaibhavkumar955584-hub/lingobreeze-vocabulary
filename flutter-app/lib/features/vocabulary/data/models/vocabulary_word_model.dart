@@ -24,11 +24,11 @@ class VocabularyWordModel extends VocabularyWord {
       translation: json['translation'] ?? '',
       category: json['category'] ?? 'General',
       isFavorite: json['isFavorite'] ?? false,
-      createdAt: json['createdAt'] != null 
-          ? DateTime.parse(json['createdAt']) 
+      createdAt: json['createdAt'] != null
+          ? DateTime.parse(json['createdAt'])
           : DateTime.now(),
-      lastPracticed: json['lastPracticed'] != null 
-          ? DateTime.parse(json['lastPracticed']) 
+      lastPracticed: json['lastPracticed'] != null
+          ? DateTime.parse(json['lastPracticed'])
           : null,
       status: LearningStatus.values.firstWhere(
         (e) => e.toString() == (json['status'] ?? 'LearningStatus.notStarted'),
@@ -63,7 +63,9 @@ class VocabularyWordModel extends VocabularyWord {
       'category': category,
       'isFavorite': isFavorite,
       'createdAt': Timestamp.fromDate(createdAt),
-      'lastPracticed': lastPracticed != null ? Timestamp.fromDate(lastPracticed!) : null,
+      'lastPracticed': lastPracticed != null
+          ? Timestamp.fromDate(lastPracticed!)
+          : null,
       'status': status.toString(),
       'correctCount': correctCount,
       'totalAttempts': totalAttempts,

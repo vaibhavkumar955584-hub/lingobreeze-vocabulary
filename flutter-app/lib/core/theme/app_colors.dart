@@ -6,14 +6,14 @@ class AppColors {
   static const primaryLight = Color(0xFF818CF8);
   static const secondary = Color(0xFF10B981);
   static const accent = Color(0xFFF59E0B);
-  
+
   // Neutral Colors
   static const background = Color(0xFFF8FAFC);
   static const surface = Colors.white;
   static const textPrimary = Color(0xFF1E293B);
   static const textSecondary = Color(0xFF64748B);
   static const border = Color(0xFFE2E8F0);
-  
+
   // Status Colors
   static const success = Color(0xFF10B981);
   static const warning = Color(0xFFF59E0B);

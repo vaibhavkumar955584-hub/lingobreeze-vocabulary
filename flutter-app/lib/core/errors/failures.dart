@@ -13,7 +13,9 @@ class CacheFailure extends Failure {
 }
 
 class NetworkFailure extends Failure {
-  const NetworkFailure([super.message = 'A network connection issue occurred.']);
+  const NetworkFailure([
+    super.message = 'A network connection issue occurred.',
+  ]);
 }
 
 class FirebaseFailure extends Failure {

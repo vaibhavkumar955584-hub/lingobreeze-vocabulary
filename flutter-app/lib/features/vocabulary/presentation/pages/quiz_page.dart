@@ -29,7 +29,9 @@ class _QuizPageState extends State<QuizPage> {
     final correct = _quizWords[_currentIndex].translation;
     setState(() {
       _isCorrect = (selectedTranslation == correct);
-      if (_isCorrect!) _score++;
+      if (_isCorrect!) {
+        _score++;
+      }
     });
 
     Future.delayed(const Duration(milliseconds: 1500), () {
@@ -66,13 +68,19 @@ class _QuizPageState extends State<QuizPage> {
 
   @override
   Widget build(BuildContext context) {
-    if (_quizWords.isEmpty) return const Scaffold(body: Center(child: Text("Not enough words for a quiz!")));
+    if (_quizWords.isEmpty) {
+      return const Scaffold(
+        body: Center(child: Text("Not enough words for a quiz!")),
+      );
+    }
 
     final currentWord = _quizWords[_currentIndex];
     final options = _getOptions(currentWord);
 
     return Scaffold(
-      appBar: AppBar(title: Text("Quiz: ${_currentIndex + 1}/${_quizWords.length}")),
+      appBar: AppBar(
+        title: Text("Quiz: ${_currentIndex + 1}/${_quizWords.length}"),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Column(
@@ -82,27 +90,39 @@ class _QuizPageState extends State<QuizPage> {
             Text(
               "How do you say...",
               textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: AppTheme.textMuted),
+              style: Theme.of(
+                context,
+              ).textTheme.bodyLarge?.copyWith(color: AppTheme.textMuted),
             ),
             const SizedBox(height: 12),
             Text(
               currentWord.word,
               textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.headlineLarge?.copyWith(fontWeight: FontWeight.bold),
+              style: Theme.of(
+                context,
+              ).textTheme.headlineLarge?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 48),
-            ...options.map((opt) => Padding(
-                  padding: const EdgeInsets.only(bottom: 16),
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 20),
-                      backgroundColor: _getButtonColor(opt),
-                      foregroundColor: _getButtonTextColor(opt),
-                    ),
-                    onPressed: () => _checkAnswer(opt),
-                    child: Text(opt, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            ...options.map(
+              (opt) => Padding(
+                padding: const EdgeInsets.only(bottom: 16),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 20),
+                    backgroundColor: _getButtonColor(opt),
+                    foregroundColor: _getButtonTextColor(opt),
                   ),
-                )),
+                  onPressed: () => _checkAnswer(opt),
+                  child: Text(
+                    opt,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),
@@ -110,7 +130,8 @@ class _QuizPageState extends State<QuizPage> {
   }
 
   List<String> _getOptions(VocabularyWord current) {
-    final others = widget.words.where((w) => w.id != current.id).toList()..shuffle();
+    final others = widget.words.where((w) => w.id != current.id).toList()
+      ..shuffle();
     final wrongOptions = others.take(3).map((w) => w.translation).toList();
     return (wrongOptions..add(current.translation))..shuffle();
   }
@@ -120,9 +141,11 @@ class _QuizPageState extends State<QuizPage> {
     if (opt == _quizWords[_currentIndex].translation) return Colors.green;
     return (_isCorrect == false) ? Colors.red.shade100 : Colors.white;
   }
-  
+
   Color _getButtonTextColor(String opt) {
-    if (_isCorrect != null && opt == _quizWords[_currentIndex].translation) return Colors.white;
+    if (_isCorrect != null && opt == _quizWords[_currentIndex].translation) {
+      return Colors.white;
+    }
     return AppTheme.textDark;
   }
 }

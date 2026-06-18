@@ -65,7 +65,9 @@ class SortOptionsSheet extends StatelessWidget {
           color: isSelected ? Colors.indigo : Colors.black87,
         ),
       ),
-      trailing: isSelected ? const Icon(Icons.check_circle, color: Colors.indigo) : null,
+      trailing: isSelected
+          ? const Icon(Icons.check_circle, color: Colors.indigo)
+          : null,
       onTap: () {
         context.read<VocabularyBloc>().add(SortWords(type));
         Navigator.pop(context);

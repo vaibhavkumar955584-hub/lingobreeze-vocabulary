@@ -68,15 +68,27 @@ class WordDetailsPage extends StatelessWidget {
             const SizedBox(height: 32),
             _buildSectionTitle("Statistics"),
             const SizedBox(height: 16),
-            _buildStatRow(Icons.calendar_today_rounded, "Added on", 
-                DateFormat('MMM dd, yyyy').format(word.createdAt)),
+            _buildStatRow(
+              Icons.calendar_today_rounded,
+              "Added on",
+              DateFormat('MMM dd, yyyy').format(word.createdAt),
+            ),
             _buildStatRow(Icons.category_rounded, "Category", word.category),
-            _buildStatRow(Icons.fitness_center_rounded, "Times Practiced", 
-                word.totalAttempts.toString()),
-            _buildStatRow(Icons.analytics_rounded, "Accuracy", 
-                "${word.accuracy.toStringAsFixed(1)}%"),
-            _buildStatRow(Icons.star_rounded, "Status", 
-                _getStatusText(word.status)),
+            _buildStatRow(
+              Icons.fitness_center_rounded,
+              "Times Practiced",
+              word.totalAttempts.toString(),
+            ),
+            _buildStatRow(
+              Icons.analytics_rounded,
+              "Accuracy",
+              "${word.accuracy.toStringAsFixed(1)}%",
+            ),
+            _buildStatRow(
+              Icons.star_rounded,
+              "Status",
+              _getStatusText(word.status),
+            ),
           ],
         ),
       ),
@@ -85,9 +97,12 @@ class WordDetailsPage extends StatelessWidget {
 
   String _getStatusText(LearningStatus status) {
     switch (status) {
-      case LearningStatus.notStarted: return "Not Started";
-      case LearningStatus.learning: return "Learning";
-      case LearningStatus.mastered: return "Mastered";
+      case LearningStatus.notStarted:
+        return "Not Started";
+      case LearningStatus.learning:
+        return "Learning";
+      case LearningStatus.mastered:
+        return "Mastered";
     }
   }
 

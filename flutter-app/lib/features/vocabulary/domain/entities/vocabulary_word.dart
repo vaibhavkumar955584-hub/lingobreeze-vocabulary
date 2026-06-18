@@ -29,7 +29,8 @@ class VocabularyWord extends Equatable {
     this.totalAttempts = 0,
   });
 
-  double get accuracy => totalAttempts == 0 ? 0.0 : (correctCount / totalAttempts) * 100;
+  double get accuracy =>
+      totalAttempts == 0 ? 0.0 : (correctCount / totalAttempts) * 100;
 
   VocabularyWord copyWith({
     String? id,
@@ -60,7 +61,16 @@ class VocabularyWord extends Equatable {
 
   @override
   List<Object?> get props => [
-        id, word, meaning, translation, category, isFavorite, 
-        createdAt, lastPracticed, status, correctCount, totalAttempts
-      ];
+    id,
+    word,
+    meaning,
+    translation,
+    category,
+    isFavorite,
+    createdAt,
+    lastPracticed,
+    status,
+    correctCount,
+    totalAttempts,
+  ];
 }

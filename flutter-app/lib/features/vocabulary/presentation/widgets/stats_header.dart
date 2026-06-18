@@ -13,7 +13,7 @@ class StatsHeader extends StatelessWidget {
       builder: (context, state) {
         final totalWords = state.savedWords.length;
         final favorites = state.savedWords.where((w) => w.isFavorite).length;
-        
+
         return Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           child: Row(
@@ -85,10 +85,7 @@ class StatsHeader extends StatelessWidget {
             ),
             Text(
               label,
-              style: const TextStyle(
-                fontSize: 12,
-                color: AppTheme.textMuted,
-              ),
+              style: const TextStyle(fontSize: 12, color: AppTheme.textMuted),
             ),
           ],
         ),

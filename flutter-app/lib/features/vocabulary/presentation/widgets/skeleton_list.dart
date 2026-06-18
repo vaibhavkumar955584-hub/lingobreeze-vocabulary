@@ -5,10 +5,7 @@ import 'package:shimmer/shimmer.dart';
 class SkeletonList extends StatelessWidget {
   final int count;
 
-  const SkeletonList({
-    super.key,
-    this.count = 4,
-  });
+  const SkeletonList({super.key, this.count = 4});
 
   @override
   Widget build(BuildContext context) {

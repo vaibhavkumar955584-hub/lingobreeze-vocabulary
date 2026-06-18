@@ -21,9 +21,18 @@ class AppTheme {
         surface: Colors.white,
       ),
       textTheme: GoogleFonts.interTextTheme().copyWith(
-        displaySmall: GoogleFonts.inter(fontWeight: FontWeight.w800, color: textDark),
-        headlineMedium: GoogleFonts.inter(fontWeight: FontWeight.w700, color: textDark),
-        titleMedium: GoogleFonts.inter(fontWeight: FontWeight.w600, color: textDark),
+        displaySmall: GoogleFonts.inter(
+          fontWeight: FontWeight.w800,
+          color: textDark,
+        ),
+        headlineMedium: GoogleFonts.inter(
+          fontWeight: FontWeight.w700,
+          color: textDark,
+        ),
+        titleMedium: GoogleFonts.inter(
+          fontWeight: FontWeight.w600,
+          color: textDark,
+        ),
         bodyLarge: GoogleFonts.inter(color: textDark, fontSize: 16),
         bodyMedium: GoogleFonts.inter(color: textMuted, fontSize: 14),
       ),
@@ -50,7 +59,9 @@ class AppTheme {
         style: ElevatedButton.styleFrom(
           elevation: 0,
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
           backgroundColor: primaryColor,
           foregroundColor: Colors.white,
         ),

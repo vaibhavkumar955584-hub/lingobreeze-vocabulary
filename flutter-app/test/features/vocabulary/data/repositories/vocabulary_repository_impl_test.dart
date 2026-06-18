@@ -9,8 +9,12 @@ import 'package:vocabulary_app/features/vocabulary/data/models/vocabulary_word_m
 import 'package:vocabulary_app/features/vocabulary/data/repositories/vocabulary_repository_impl.dart';
 
 class MockRemoteDataSource extends Mock implements VocabularyRemoteDataSource {}
-class MockFirestoreDataSource extends Mock implements VocabularyFirestoreDataSource {}
+
+class MockFirestoreDataSource extends Mock
+    implements VocabularyFirestoreDataSource {}
+
 class MockBox extends Mock implements Box {}
+
 class MockConnectivity extends Mock implements Connectivity {}
 
 void main() {
@@ -25,11 +29,12 @@ void main() {
     mockFirestoreDataSource = MockFirestoreDataSource();
     mockBox = MockBox();
     mockConnectivity = MockConnectivity();
-    
+
     // Stub connectivity check
-    when(() => mockConnectivity.checkConnectivity())
-        .thenAnswer((_) async => ConnectivityResult.wifi);
-    
+    when(
+      () => mockConnectivity.checkConnectivity(),
+    ).thenAnswer((_) async => ConnectivityResult.wifi);
+
     // Stub Hive box put
     when(() => mockBox.put(any(), any())).thenAnswer((_) async => {});
 
@@ -51,34 +56,42 @@ void main() {
     );
     final tWordModelList = [tWordModel];
 
-    test('should return remote data when the call to remote data source is successful', () async {
-      // arrange
-      when(() => mockRemoteDataSource.getWordsFromAPI())
-          .thenAnswer((_) async => tWordModelList);
-      // act
-      final result = await repository.getWordsFromAPI();
-      // assert
-      verify(() => mockRemoteDataSource.getWordsFromAPI());
-      expect(result.isSuccess, true);
-      result.fold(
-        (success) => expect(success, tWordModelList),
-        (failure) => fail('Should not return failure'),
-      );
-    });
+    test(
+      'should return remote data when the call to remote data source is successful',
+      () async {
+        // arrange
+        when(
+          () => mockRemoteDataSource.getWordsFromAPI(),
+        ).thenAnswer((_) async => tWordModelList);
+        // act
+        final result = await repository.getWordsFromAPI();
+        // assert
+        verify(() => mockRemoteDataSource.getWordsFromAPI());
+        expect(result.isSuccess, true);
+        result.fold(
+          (success) => expect(success, tWordModelList),
+          (failure) => fail('Should not return failure'),
+        );
+      },
+    );
 
-    test('should return ServerFailure when the call to remote data source is unsuccessful', () async {
-      // arrange
-      when(() => mockRemoteDataSource.getWordsFromAPI())
-          .thenThrow(Exception());
-      // act
-      final result = await repository.getWordsFromAPI();
-      // assert
-      verify(() => mockRemoteDataSource.getWordsFromAPI());
-      expect(result.isFailure, true);
-      result.fold(
-        (success) => fail('Should not return success'),
-        (failure) => expect(failure, isA<ServerFailure>()),
-      );
-    });
+    test(
+      'should return ServerFailure when the call to remote data source is unsuccessful',
+      () async {
+        // arrange
+        when(
+          () => mockRemoteDataSource.getWordsFromAPI(),
+        ).thenThrow(Exception());
+        // act
+        final result = await repository.getWordsFromAPI();
+        // assert
+        verify(() => mockRemoteDataSource.getWordsFromAPI());
+        expect(result.isFailure, true);
+        result.fold(
+          (success) => fail('Should not return success'),
+          (failure) => expect(failure, isA<ServerFailure>()),
+        );
+      },
+    );
   });
 }

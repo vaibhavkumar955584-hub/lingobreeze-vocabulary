@@ -49,7 +49,8 @@ class _AddWordBottomSheetState extends State<AddWordBottomSheet> {
     final meaning = _meaningController.text.trim();
     final translation = _translationController.text.trim();
 
-    final isValid = word.isNotEmpty && meaning.isNotEmpty && translation.isNotEmpty;
+    final isValid =
+        word.isNotEmpty && meaning.isNotEmpty && translation.isNotEmpty;
 
     if (isValid != _isFormValid) {
       setState(() {
@@ -62,19 +63,19 @@ class _AddWordBottomSheetState extends State<AddWordBottomSheet> {
   void _submitForm() {
     if (_formKey.currentState?.validate() ?? false) {
       context.read<VocabularyBloc>().add(
-            AddWordEvent(
-              word: _wordController.text.trim(),
-              meaning: _meaningController.text.trim(),
-              translation: _translationController.text.trim(),
-            ),
-          );
+        AddWordEvent(
+          word: _wordController.text.trim(),
+          meaning: _meaningController.text.trim(),
+          translation: _translationController.text.trim(),
+        ),
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     // Bottom padding to push layout above virtual keyboard
     final keyboardPadding = MediaQuery.of(context).viewInsets.bottom;
 
@@ -145,7 +146,10 @@ class _AddWordBottomSheetState extends State<AddWordBottomSheet> {
                       decoration: const InputDecoration(
                         labelText: "Word",
                         hintText: "Enter the vocabulary word (e.g. Apple)",
-                        prefixIcon: Icon(Icons.abc_rounded, color: AppTheme.textMuted),
+                        prefixIcon: Icon(
+                          Icons.abc_rounded,
+                          color: AppTheme.textMuted,
+                        ),
                       ),
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                       validator: (value) {
@@ -166,7 +170,10 @@ class _AddWordBottomSheetState extends State<AddWordBottomSheet> {
                       decoration: const InputDecoration(
                         labelText: "Meaning",
                         hintText: "Enter the definition/meaning (e.g. A fruit)",
-                        prefixIcon: Icon(Icons.info_outline_rounded, color: AppTheme.textMuted),
+                        prefixIcon: Icon(
+                          Icons.info_outline_rounded,
+                          color: AppTheme.textMuted,
+                        ),
                       ),
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                       validator: (value) {
@@ -185,7 +192,10 @@ class _AddWordBottomSheetState extends State<AddWordBottomSheet> {
                       decoration: const InputDecoration(
                         labelText: "Translation",
                         hintText: "Enter translation (e.g. Manzana)",
-                        prefixIcon: Icon(Icons.g_translate_rounded, color: AppTheme.textMuted),
+                        prefixIcon: Icon(
+                          Icons.g_translate_rounded,
+                          color: AppTheme.textMuted,
+                        ),
                       ),
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                       validator: (value) {
@@ -210,9 +220,14 @@ class _AddWordBottomSheetState extends State<AddWordBottomSheet> {
                     children: [
                       // Cancel Button
                       TextButton(
-                        onPressed: isAdding ? null : () => Navigator.of(context).pop(),
+                        onPressed: isAdding
+                            ? null
+                            : () => Navigator.of(context).pop(),
                         style: TextButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 14,
+                          ),
                           foregroundColor: AppTheme.textMuted,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
@@ -220,21 +235,29 @@ class _AddWordBottomSheetState extends State<AddWordBottomSheet> {
                         ),
                         child: const Text(
                           "Cancel",
-                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
                         ),
                       ),
                       const SizedBox(width: 12),
 
                       // Save Button
                       ElevatedButton(
-                        onPressed: (_isFormValid && !isAdding) ? _submitForm : null,
+                        onPressed: (_isFormValid && !isAdding)
+                            ? _submitForm
+                            : null,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppTheme.primaryColor,
                           foregroundColor: Colors.white,
                           disabledBackgroundColor: AppTheme.borderLight,
                           disabledForegroundColor: AppTheme.textMuted,
                           elevation: 0,
-                          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 24,
+                            vertical: 14,
+                          ),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
@@ -245,12 +268,17 @@ class _AddWordBottomSheetState extends State<AddWordBottomSheet> {
                                 height: 20,
                                 child: CircularProgressIndicator(
                                   strokeWidth: 2.5,
-                                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                    Colors.white,
+                                  ),
                                 ),
                               )
                             : const Text(
                                 "Save Word",
-                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
                               ),
                       ),
                     ],

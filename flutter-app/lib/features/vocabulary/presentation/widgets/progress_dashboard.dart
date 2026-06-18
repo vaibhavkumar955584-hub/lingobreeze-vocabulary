@@ -17,9 +17,13 @@ class ProgressDashboard extends StatelessWidget {
     return BlocBuilder<VocabularyBloc, VocabularyState>(
       builder: (context, state) {
         final total = state.savedWords.length;
-        final mastered = state.savedWords.where((w) => w.status == LearningStatus.mastered).length;
-        final learning = state.savedWords.where((w) => w.status == LearningStatus.learning).length;
-        
+        final mastered = state.savedWords
+            .where((w) => w.status == LearningStatus.mastered)
+            .length;
+        final learning = state.savedWords
+            .where((w) => w.status == LearningStatus.learning)
+            .length;
+
         final xp = (mastered * 50) + (learning * 20) + (total * 10);
         final level = (xp / 500).floor() + 1;
         final progressToNextLevel = (xp % 500) / 500;
@@ -27,7 +31,10 @@ class ProgressDashboard extends StatelessWidget {
 
         return RepaintBoundary(
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.sm),
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.md,
+              vertical: AppSpacing.sm,
+            ),
             child: Column(
               children: [
                 Row(
@@ -50,7 +57,9 @@ class ProgressDashboard extends StatelessWidget {
                         value: progressToNextLevel,
                         strokeWidth: 10,
                         backgroundColor: AppColors.border,
-                        valueColor: const AlwaysStoppedAnimation<Color>(AppColors.primary),
+                        valueColor: const AlwaysStoppedAnimation<Color>(
+                          AppColors.primary,
+                        ),
                         strokeCap: StrokeCap.round,
                       ),
                     ),
@@ -58,20 +67,36 @@ class ProgressDashboard extends StatelessWidget {
                       children: [
                         Text(
                           "$level",
-                          style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w900, color: AppColors.textPrimary),
+                          style: const TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w900,
+                            color: AppColors.textPrimary,
+                          ),
                         ),
                         const Text(
                           "LEVEL",
-                          style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: AppColors.textSecondary),
+                          style: TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.textSecondary,
+                          ),
                         ),
                       ],
                     ),
                   ],
-                ).animate().scale(delay: 200.ms, duration: 500.ms, curve: Curves.elasticOut),
+                ).animate().scale(
+                  delay: 200.ms,
+                  duration: 500.ms,
+                  curve: Curves.elasticOut,
+                ),
                 const SizedBox(height: AppSpacing.md),
                 Text(
                   "${(progressToNextLevel * 100).toInt()}% to Level ${level + 1}",
-                  style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.textSecondary),
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.textSecondary,
+                  ),
                 ),
               ],
             ),
@@ -91,7 +116,11 @@ class ProgressDashboard extends StatelessWidget {
       ),
       child: Text(
         label,
-        style: TextStyle(color: color, fontWeight: FontWeight.w800, fontSize: 13),
+        style: TextStyle(
+          color: color,
+          fontWeight: FontWeight.w800,
+          fontSize: 13,
+        ),
       ),
     );
   }

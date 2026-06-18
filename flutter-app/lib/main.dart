@@ -27,12 +27,20 @@ void main() async {
   } catch (e) {
     // Graceful fallback to Mock mode if configuration files are invalid/missing
     useMockFirebase = true;
-    debugPrint("==================================================================");
+    debugPrint(
+      "==================================================================",
+    );
     debugPrint(" WARNING: Firebase could not be initialized.");
-    debugPrint(" Falling back to LOCAL IN-MEMORY mock Firestore implementation.");
+    debugPrint(
+      " Falling back to LOCAL IN-MEMORY mock Firestore implementation.",
+    );
     debugPrint(" Reason: $e");
-    debugPrint(" To use real Firestore, configure a project in Firebase Console.");
-    debugPrint("==================================================================");
+    debugPrint(
+      " To use real Firestore, configure a project in Firebase Console.",
+    );
+    debugPrint(
+      "==================================================================",
+    );
   }
 
   // Set up dependency injection container

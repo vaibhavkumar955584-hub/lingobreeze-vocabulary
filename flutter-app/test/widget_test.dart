@@ -27,8 +27,9 @@ void main() {
     );
   }
 
-  testWidgets('renders empty state UI elements when state is VocabularyEmpty',
-      (WidgetTester tester) async {
+  testWidgets('renders empty state UI elements when state is VocabularyEmpty', (
+    WidgetTester tester,
+  ) async {
     // Arrange
     when(() => mockBloc.state).thenReturn(const VocabularyEmpty(apiWords: []));
 

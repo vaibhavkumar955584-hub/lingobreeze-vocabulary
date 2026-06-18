@@ -22,7 +22,8 @@ class MyVocabularyPage extends StatefulWidget {
   State<MyVocabularyPage> createState() => _MyVocabularyPageState();
 }
 
-class _MyVocabularyPageState extends State<MyVocabularyPage> with SingleTickerProviderStateMixin {
+class _MyVocabularyPageState extends State<MyVocabularyPage>
+    with SingleTickerProviderStateMixin {
   late final TabController _tabController;
   final TextEditingController _searchController = TextEditingController();
 
@@ -31,7 +32,7 @@ class _MyVocabularyPageState extends State<MyVocabularyPage> with SingleTickerPr
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
     context.read<VocabularyBloc>().add(LoadWords());
-    
+
     _searchController.addListener(() {
       context.read<VocabularyBloc>().add(SearchWords(_searchController.text));
     });
@@ -81,7 +82,10 @@ class _MyVocabularyPageState extends State<MyVocabularyPage> with SingleTickerPr
         title: const Text("LingoBreeze"),
         actions: [
           IconButton(
-            onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const StatsPage())),
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const StatsPage()),
+            ),
             icon: const Icon(Icons.insights_rounded),
           ),
           IconButton(
@@ -95,7 +99,10 @@ class _MyVocabularyPageState extends State<MyVocabularyPage> with SingleTickerPr
           child: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 4,
+                ),
                 child: TextField(
                   controller: _searchController,
                   decoration: InputDecoration(
@@ -126,12 +133,19 @@ class _MyVocabularyPageState extends State<MyVocabularyPage> with SingleTickerPr
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(26),
                     boxShadow: const [
-                      BoxShadow(color: Color(0x0A000000), blurRadius: 4, offset: Offset(0, 2)),
+                      BoxShadow(
+                        color: Color(0x0A000000),
+                        blurRadius: 4,
+                        offset: Offset(0, 2),
+                      ),
                     ],
                   ),
                   labelColor: AppTheme.primaryColor,
                   unselectedLabelColor: AppTheme.textMuted,
-                  labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                  labelStyle: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                  ),
                   tabs: const [
                     Tab(text: "My Library"),
                     Tab(text: "Discover"),
@@ -151,24 +165,31 @@ class _MyVocabularyPageState extends State<MyVocabularyPage> with SingleTickerPr
                 content: const Text("Word added to your library!"),
                 behavior: SnackBarBehavior.floating,
                 backgroundColor: AppTheme.accentColor,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
               ),
             );
           }
         },
         child: TabBarView(
-        controller: _tabController,
-        children: [
-          _buildMyLibraryTab(context, theme),
-          const DiscoverTabView(),
-        ],
+          controller: _tabController,
+          children: [
+            _buildMyLibraryTab(context, theme),
+            const DiscoverTabView(),
+          ],
+        ),
       ),
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => _openAddWordModal(context),
-        icon: const Icon(Icons.add_rounded),
-        label: const Text("New Word"),
-      ).animate().scale(delay: 400.ms, duration: 400.ms, curve: Curves.easeOutBack),
+      floatingActionButton:
+          FloatingActionButton.extended(
+            onPressed: () => _openAddWordModal(context),
+            icon: const Icon(Icons.add_rounded),
+            label: const Text("New Word"),
+          ).animate().scale(
+            delay: 400.ms,
+            duration: 400.ms,
+            curve: Curves.easeOutBack,
+          ),
     );
   }
 
@@ -186,29 +207,33 @@ class _MyVocabularyPageState extends State<MyVocabularyPage> with SingleTickerPr
         final words = state.filteredWords;
 
         return RefreshIndicator(
-          onRefresh: () async => context.read<VocabularyBloc>().add(LoadWords()),
+          onRefresh: () async =>
+              context.read<VocabularyBloc>().add(LoadWords()),
           child: CustomScrollView(
             slivers: [
               const SliverToBoxAdapter(child: ProgressDashboard()),
               if (words.isEmpty && state.searchQuery.isNotEmpty)
-                const SliverFillRemaining(child: Center(child: Text("No words match your search"))),
-              SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) {
-                    final word = words[index];
-                    return WordCard(
-                      word: word,
-                      isSaved: true,
-                      onFavoriteToggle: (isFav) {
-                        context.read<VocabularyBloc>().add(ToggleFavoriteWord(word.id, isFav));
-                      },
-                      onDelete: () {
-                        context.read<VocabularyBloc>().add(DeleteWordEvent(word.id));
-                      },
-                    );
-                  },
-                  childCount: words.length,
+                const SliverFillRemaining(
+                  child: Center(child: Text("No words match your search")),
                 ),
+              SliverList(
+                delegate: SliverChildBuilderDelegate((context, index) {
+                  final word = words[index];
+                  return WordCard(
+                    word: word,
+                    isSaved: true,
+                    onFavoriteToggle: (isFav) {
+                      context.read<VocabularyBloc>().add(
+                        ToggleFavoriteWord(word.id, isFav),
+                      );
+                    },
+                    onDelete: () {
+                      context.read<VocabularyBloc>().add(
+                        DeleteWordEvent(word.id),
+                      );
+                    },
+                  );
+                }, childCount: words.length),
               ),
               const SliverPadding(padding: EdgeInsets.only(bottom: 100)),
             ],

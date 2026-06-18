@@ -20,8 +20,8 @@ class VocabularyRepositoryImpl implements VocabularyRepository {
     required this.firestoreDataSource,
     Box? cacheBox,
     Connectivity? connectivity,
-  })  : _cacheBox = cacheBox ?? Hive.box('vocabulary_cache'),
-        _connectivity = connectivity ?? Connectivity();
+  }) : _cacheBox = cacheBox ?? Hive.box('vocabulary_cache'),
+       _connectivity = connectivity ?? Connectivity();
 
   @override
   Future<Result<List<VocabularyWord>, Failure>> getWordsFromAPI({
@@ -35,11 +35,17 @@ class VocabularyRepositoryImpl implements VocabularyRepository {
       try {
         final models = await remoteDataSource.getWordsFromAPI();
         // Update cache on success
-        await _cacheBox.put('discover_words', models.map((m) => m.toJson()).toList());
+        await _cacheBox.put(
+          'discover_words',
+          models.map((m) => m.toJson()).toList(),
+        );
         return Ok(models);
       } catch (e) {
         // Fallback to cache if API fails while online
-        return _loadFromCache();
+        final cacheResult = await _loadFromCache();
+        if (cacheResult.isSuccess) return cacheResult;
+
+        return Err(ServerFailure(e.toString()));
       }
     } else {
       // Direct load from cache if offline
@@ -52,23 +58,33 @@ class VocabularyRepositoryImpl implements VocabularyRepository {
     if (cachedData != null) {
       try {
         final List<VocabularyWord> cachedWords = (cachedData as List)
-            .map((json) => VocabularyWordModel.fromJson(Map<String, dynamic>.from(json)))
+            .map(
+              (json) =>
+                  VocabularyWordModel.fromJson(Map<String, dynamic>.from(json)),
+            )
             .toList();
         return Ok(cachedWords);
       } catch (e) {
         return Err(CacheFailure('Failed to load vocabulary from cache: $e'));
       }
     }
-    return const Err(NetworkFailure('Unable to load data. Please check your connection and try again.'));
+    return const Err(
+      NetworkFailure(
+        'Unable to load data. Please check your connection and try again.',
+      ),
+    );
   }
 
   @override
   Stream<Result<List<VocabularyWord>, Failure>> watchSavedWords() {
-    return firestoreDataSource.watchSavedWords().map<Result<List<VocabularyWord>, Failure>>((models) {
-      return Ok(models);
-    }).handleError((error) {
-      return Err(FirebaseFailure(error.toString()));
-    });
+    return firestoreDataSource
+        .watchSavedWords()
+        .map<Result<List<VocabularyWord>, Failure>>((models) {
+          return Ok(models);
+        })
+        .handleError((error) {
+          return Err(FirebaseFailure(error.toString()));
+        });
   }
 
   @override
@@ -93,7 +109,10 @@ class VocabularyRepositoryImpl implements VocabularyRepository {
   }
 
   @override
-  Future<Result<void, Failure>> toggleFavorite(String id, bool isFavorite) async {
+  Future<Result<void, Failure>> toggleFavorite(
+    String id,
+    bool isFavorite,
+  ) async {
     try {
       await firestoreDataSource.updateWord(id, {'isFavorite': isFavorite});
       return const Ok(null);
@@ -103,12 +122,17 @@ class VocabularyRepositoryImpl implements VocabularyRepository {
   }
 
   @override
-  Future<Result<void, Failure>> updateStats(String id, {required bool correct}) async {
+  Future<Result<void, Failure>> updateStats(
+    String id, {
+    required bool correct,
+  }) async {
     try {
       await firestoreDataSource.updateWord(id, {
         'lastPracticed': Timestamp.now(),
         'totalAttempts': FieldValue.increment(1),
-        'correctCount': correct ? FieldValue.increment(1) : FieldValue.increment(0),
+        'correctCount': correct
+            ? FieldValue.increment(1)
+            : FieldValue.increment(0),
       });
       return const Ok(null);
     } catch (e) {

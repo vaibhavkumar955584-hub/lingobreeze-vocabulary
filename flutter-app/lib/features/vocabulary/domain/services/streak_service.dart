@@ -4,20 +4,29 @@ class StreakService {
   int calculateCurrentStreak(List<VocabularyWord> words) {
     if (words.isEmpty) return 0;
 
-    final practiceDates = words
-        .where((w) => w.lastPracticed != null)
-        .map((w) => DateTime(w.lastPracticed!.year, w.lastPracticed!.month, w.lastPracticed!.day))
-        .toSet()
-        .toList()
-      ..sort((a, b) => b.compareTo(a));
+    final practiceDates =
+        words
+            .where((w) => w.lastPracticed != null)
+            .map(
+              (w) => DateTime(
+                w.lastPracticed!.year,
+                w.lastPracticed!.month,
+                w.lastPracticed!.day,
+              ),
+            )
+            .toSet()
+            .toList()
+          ..sort((a, b) => b.compareTo(a));
 
     if (practiceDates.isEmpty) return 0;
 
     final today = DateTime.now();
     final todayMidnight = DateTime(today.year, today.month, today.day);
-    
+
     // Check if the latest practice was today or yesterday
-    if (practiceDates.first.isBefore(todayMidnight.subtract(const Duration(days: 1)))) {
+    if (practiceDates.first.isBefore(
+      todayMidnight.subtract(const Duration(days: 1)),
+    )) {
       return 0;
     }
 

@@ -31,13 +31,13 @@ class VocabularyBloc extends Bloc<VocabularyEvent, VocabularyState> {
     required usecase.DeleteWord deleteWord,
     required ToggleFavorite toggleFavorite,
     FirebaseAnalytics? analytics,
-  })  : _getWordsFromAPI = getWordsFromAPI,
-        _watchSavedWords = watchSavedWords,
-        _saveWord = saveWord,
-        _deleteWord = deleteWord,
-        _toggleFavorite = toggleFavorite,
-        _analytics = analytics ?? FirebaseAnalytics.instance,
-        super(VocabularyInitial()) {
+  }) : _getWordsFromAPI = getWordsFromAPI,
+       _watchSavedWords = watchSavedWords,
+       _saveWord = saveWord,
+       _deleteWord = deleteWord,
+       _toggleFavorite = toggleFavorite,
+       _analytics = analytics ?? FirebaseAnalytics.instance,
+       super(VocabularyInitial()) {
     on<LoadWords>(_onLoadWords);
     on<RefreshWords>(_onRefreshWords);
     on<AddWordEvent>(_onAddWord);
@@ -49,52 +49,62 @@ class VocabularyBloc extends Bloc<VocabularyEvent, VocabularyState> {
     on<UpdateSavedWordsError>(_onUpdateSavedWordsError);
   }
 
-  Future<void> _onLoadWords(LoadWords event, Emitter<VocabularyState> emit) async {
+  Future<void> _onLoadWords(
+    LoadWords event,
+    Emitter<VocabularyState> emit,
+  ) async {
     _isApiLoading = true;
-    emit(VocabularyLoading(
-      savedWords: _allSavedWords,
-      filteredWords: state.filteredWords,
-      apiWords: _apiWords,
-      searchQuery: state.searchQuery,
-      sortType: state.sortType,
-    ));
+    emit(
+      VocabularyLoading(
+        savedWords: _allSavedWords,
+        filteredWords: state.filteredWords,
+        apiWords: _apiWords,
+        searchQuery: state.searchQuery,
+        sortType: state.sortType,
+      ),
+    );
 
     await _savedWordsSubscription?.cancel();
-    _savedWordsSubscription = _watchSavedWords().listen(
-      (result) {
-        result.fold(
-          (words) => add(UpdateSavedWords(words)),
-          (failure) => add(UpdateSavedWordsError(failure.message)),
-        );
-      },
-    );
+    _savedWordsSubscription = _watchSavedWords().listen((result) {
+      result.fold(
+        (words) => add(UpdateSavedWords(words)),
+        (failure) => add(UpdateSavedWordsError(failure.message)),
+      );
+    });
 
     final apiResult = await _getWordsFromAPI();
     _isApiLoading = false;
-    
+
     apiResult.fold(
       (words) {
         _apiWords = List.from(words)..shuffle();
         _updateRecentlyShown(_apiWords);
         _emitCurrentState(emit);
       },
-      (failure) => emit(VocabularyError(
-        errorMessage: failure.message,
-        savedWords: _allSavedWords,
-        apiWords: _apiWords,
-      )),
+      (failure) => emit(
+        VocabularyError(
+          errorMessage: failure.message,
+          savedWords: _allSavedWords,
+          apiWords: _apiWords,
+        ),
+      ),
     );
   }
 
-  Future<void> _onRefreshWords(RefreshWords event, Emitter<VocabularyState> emit) async {
+  Future<void> _onRefreshWords(
+    RefreshWords event,
+    Emitter<VocabularyState> emit,
+  ) async {
     _isApiLoading = true;
-    emit(VocabularyLoading(
-      savedWords: _allSavedWords,
-      filteredWords: state.filteredWords,
-      apiWords: _apiWords,
-      searchQuery: state.searchQuery,
-      sortType: state.sortType,
-    ));
+    emit(
+      VocabularyLoading(
+        savedWords: _allSavedWords,
+        filteredWords: state.filteredWords,
+        apiWords: _apiWords,
+        searchQuery: state.searchQuery,
+        sortType: state.sortType,
+      ),
+    );
 
     final apiResult = await _getWordsFromAPI();
     _isApiLoading = false;
@@ -103,10 +113,12 @@ class VocabularyBloc extends Bloc<VocabularyEvent, VocabularyState> {
       (words) {
         // Shuffle the pool
         final pool = List<VocabularyWord>.from(words)..shuffle();
-        
+
         // Try to find words not recently shown
-        final freshWords = pool.where((w) => !_recentlyShownWordIds.contains(w.id)).toList();
-        
+        final freshWords = pool
+            .where((w) => !_recentlyShownWordIds.contains(w.id))
+            .toList();
+
         if (freshWords.length >= 5) {
           _apiWords = freshWords.take(10).toList();
         } else {
@@ -114,15 +126,17 @@ class VocabularyBloc extends Bloc<VocabularyEvent, VocabularyState> {
           _recentlyShownWordIds.clear();
           _apiWords = pool.take(10).toList();
         }
-        
+
         _updateRecentlyShown(_apiWords);
         _emitCurrentState(emit);
       },
-      (failure) => emit(VocabularyError(
-        errorMessage: failure.message,
-        savedWords: _allSavedWords,
-        apiWords: _apiWords,
-      )),
+      (failure) => emit(
+        VocabularyError(
+          errorMessage: failure.message,
+          savedWords: _allSavedWords,
+          apiWords: _apiWords,
+        ),
+      ),
     );
   }
 
@@ -132,16 +146,18 @@ class VocabularyBloc extends Bloc<VocabularyEvent, VocabularyState> {
     }
     // Keep history size manageable (e.g., last 30 words)
     if (_recentlyShownWordIds.length > 30) {
-      final toRemove = _recentlyShownWordIds.take(_recentlyShownWordIds.length - 30).toList();
+      final toRemove = _recentlyShownWordIds
+          .take(_recentlyShownWordIds.length - 30)
+          .toList();
       _recentlyShownWordIds.removeAll(toRemove);
     }
   }
 
-  Future<void> _onAddWord(AddWordEvent event, Emitter<VocabularyState> emit) async {
-    emit(VocabularyAddingWord(
-      savedWords: _allSavedWords,
-      apiWords: _apiWords,
-    ));
+  Future<void> _onAddWord(
+    AddWordEvent event,
+    Emitter<VocabularyState> emit,
+  ) async {
+    emit(VocabularyAddingWord(savedWords: _allSavedWords, apiWords: _apiWords));
 
     final word = VocabularyWord(
       id: '',
@@ -151,35 +167,51 @@ class VocabularyBloc extends Bloc<VocabularyEvent, VocabularyState> {
       createdAt: DateTime.now(),
     );
 
-    await _analytics.logEvent(name: 'word_added', parameters: {'word': event.word});
-    
+    await _analytics.logEvent(
+      name: 'word_added',
+      parameters: {'word': event.word},
+    );
+
     final result = await _saveWord(word);
-    
+
     result.fold(
       (_) {
-        emit(VocabularyAddSuccess(
-          savedWords: _allSavedWords,
-          apiWords: _apiWords,
-        ));
-        // We don't need to manually update _allSavedWords because the 
+        emit(
+          VocabularyAddSuccess(savedWords: _allSavedWords, apiWords: _apiWords),
+        );
+        // We don't need to manually update _allSavedWords because the
         // Firestore stream listener will handle it and trigger UpdateSavedWords.
         _emitCurrentState(emit);
       },
-      (failure) => emit(VocabularyAddFailure(
-        errorMessage: failure.message,
-        savedWords: _allSavedWords,
-        apiWords: _apiWords,
-      )),
+      (failure) => emit(
+        VocabularyAddFailure(
+          errorMessage: failure.message,
+          savedWords: _allSavedWords,
+          apiWords: _apiWords,
+        ),
+      ),
     );
   }
 
-  Future<void> _onDeleteWord(DeleteWordEvent event, Emitter<VocabularyState> emit) async {
-    await _analytics.logEvent(name: 'word_deleted', parameters: {'word_id': event.id});
+  Future<void> _onDeleteWord(
+    DeleteWordEvent event,
+    Emitter<VocabularyState> emit,
+  ) async {
+    await _analytics.logEvent(
+      name: 'word_deleted',
+      parameters: {'word_id': event.id},
+    );
     await _deleteWord(event.id);
   }
 
-  Future<void> _onToggleFavorite(ToggleFavoriteWord event, Emitter<VocabularyState> emit) async {
-    await _analytics.logEvent(name: 'word_favorite_toggled', parameters: {'is_favorite': event.isFavorite});
+  Future<void> _onToggleFavorite(
+    ToggleFavoriteWord event,
+    Emitter<VocabularyState> emit,
+  ) async {
+    await _analytics.logEvent(
+      name: 'word_favorite_toggled',
+      parameters: {'is_favorite': event.isFavorite},
+    );
     await _toggleFavorite(event.id, event.isFavorite);
   }
 
@@ -194,13 +226,21 @@ class VocabularyBloc extends Bloc<VocabularyEvent, VocabularyState> {
     _emitCurrentState(emit, sortType: event.sortType);
   }
 
-  void _onUpdateSavedWords(UpdateSavedWords event, Emitter<VocabularyState> emit) {
+  void _onUpdateSavedWords(
+    UpdateSavedWords event,
+    Emitter<VocabularyState> emit,
+  ) {
     _allSavedWords = event.savedWords;
     _emitCurrentState(emit);
   }
 
-  void _onUpdateSavedWordsError(UpdateSavedWordsError event, Emitter<VocabularyState> emit) {
-    emit(VocabularyError(errorMessage: event.message, savedWords: _allSavedWords));
+  void _onUpdateSavedWordsError(
+    UpdateSavedWordsError event,
+    Emitter<VocabularyState> emit,
+  ) {
+    emit(
+      VocabularyError(errorMessage: event.message, savedWords: _allSavedWords),
+    );
   }
 
   void _emitCurrentState(
@@ -215,9 +255,11 @@ class VocabularyBloc extends Bloc<VocabularyEvent, VocabularyState> {
 
     if (query.isNotEmpty) {
       filtered = filtered
-          .where((w) =>
-              w.word.toLowerCase().contains(query.toLowerCase()) ||
-              w.translation.toLowerCase().contains(query.toLowerCase()))
+          .where(
+            (w) =>
+                w.word.toLowerCase().contains(query.toLowerCase()) ||
+                w.translation.toLowerCase().contains(query.toLowerCase()),
+          )
           .toList();
     }
 
@@ -231,23 +273,27 @@ class VocabularyBloc extends Bloc<VocabularyEvent, VocabularyState> {
     }
 
     if (_isApiLoading && _apiWords.isEmpty) {
-      emit(VocabularyLoading(
-        savedWords: _allSavedWords,
-        filteredWords: filtered,
-        apiWords: _apiWords,
-        searchQuery: query,
-        sortType: sort,
-      ));
+      emit(
+        VocabularyLoading(
+          savedWords: _allSavedWords,
+          filteredWords: filtered,
+          apiWords: _apiWords,
+          searchQuery: query,
+          sortType: sort,
+        ),
+      );
     } else if (_allSavedWords.isEmpty && query.isEmpty) {
       emit(VocabularyEmpty(apiWords: _apiWords));
     } else {
-      emit(VocabularyLoaded(
-        savedWords: _allSavedWords,
-        filteredWords: filtered,
-        apiWords: _apiWords,
-        searchQuery: query,
-        sortType: sort,
-      ));
+      emit(
+        VocabularyLoaded(
+          savedWords: _allSavedWords,
+          filteredWords: filtered,
+          apiWords: _apiWords,
+          searchQuery: query,
+          sortType: sort,
+        ),
+      );
     }
   }
 

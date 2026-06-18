@@ -11,7 +11,8 @@ abstract class VocabularyFirestoreDataSource {
 }
 
 /// Implementation using standard Firestore SDK.
-class VocabularyFirestoreDataSourceImpl implements VocabularyFirestoreDataSource {
+class VocabularyFirestoreDataSourceImpl
+    implements VocabularyFirestoreDataSource {
   final FirebaseFirestore firestore;
 
   VocabularyFirestoreDataSourceImpl({required this.firestore});
@@ -23,10 +24,10 @@ class VocabularyFirestoreDataSourceImpl implements VocabularyFirestoreDataSource
         .orderBy('createdAt', descending: true)
         .snapshots()
         .map((snapshot) {
-      return snapshot.docs
-          .map((doc) => VocabularyWordModel.fromFirestore(doc))
-          .toList();
-    });
+          return snapshot.docs
+              .map((doc) => VocabularyWordModel.fromFirestore(doc))
+              .toList();
+        });
   }
 
   @override
@@ -53,7 +54,8 @@ class VocabularyFirestoreDataSourceImpl implements VocabularyFirestoreDataSource
 }
 
 /// Fallback Mock Implementation
-class MockVocabularyFirestoreDataSourceImpl implements VocabularyFirestoreDataSource {
+class MockVocabularyFirestoreDataSourceImpl
+    implements VocabularyFirestoreDataSource {
   final StreamController<List<VocabularyWordModel>> _controller =
       StreamController<List<VocabularyWordModel>>.broadcast();
 
@@ -64,7 +66,8 @@ class MockVocabularyFirestoreDataSourceImpl implements VocabularyFirestoreDataSo
       VocabularyWordModel(
         id: 'mock-1',
         word: 'Serendipity',
-        meaning: 'The occurrence and development of events by chance in a happy or beneficial way.',
+        meaning:
+            'The occurrence and development of events by chance in a happy or beneficial way.',
         translation: 'Serendipia',
         isFavorite: true,
         category: 'English',
@@ -93,7 +96,9 @@ class MockVocabularyFirestoreDataSourceImpl implements VocabularyFirestoreDataSo
 
   @override
   Future<void> saveWord(VocabularyWordModel word) async {
-    final index = _mockSavedWords.indexWhere((w) => w.id == word.id && word.id.isNotEmpty);
+    final index = _mockSavedWords.indexWhere(
+      (w) => w.id == word.id && word.id.isNotEmpty,
+    );
     if (index != -1) {
       _mockSavedWords[index] = word;
     } else {
@@ -132,8 +137,8 @@ class MockVocabularyFirestoreDataSourceImpl implements VocabularyFirestoreDataSo
         category: data['category'] ?? current.category,
         totalAttempts: data['totalAttempts'] ?? current.totalAttempts,
         correctCount: data['correctCount'] ?? current.correctCount,
-        lastPracticed: data['lastPracticed'] is DateTime 
-            ? data['lastPracticed'] 
+        lastPracticed: data['lastPracticed'] is DateTime
+            ? data['lastPracticed']
             : current.lastPracticed,
       );
       _controller.add(List.unmodifiable(_mockSavedWords));

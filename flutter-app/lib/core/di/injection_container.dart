@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
@@ -24,14 +23,16 @@ const String _apiBaseUrl = 'https://6613340f252ec00427c387f6.mockapi.io/api/v1';
 
 Future<void> init({bool useMockFirebase = false}) async {
   // State Management (BLoC)
-  sl.registerFactory(() => VocabularyBloc(
-        getWordsFromAPI: sl(),
-        watchSavedWords: sl(),
-        saveWord: sl(),
-        deleteWord: sl(),
-        toggleFavorite: sl(),
-        analytics: sl(),
-      ));
+  sl.registerFactory(
+    () => VocabularyBloc(
+      getWordsFromAPI: sl(),
+      watchSavedWords: sl(),
+      saveWord: sl(),
+      deleteWord: sl(),
+      toggleFavorite: sl(),
+      analytics: sl(),
+    ),
+  );
 
   // Use Cases
   sl.registerLazySingleton(() => GetWordsFromAPI(sl()));
@@ -41,42 +42,51 @@ Future<void> init({bool useMockFirebase = false}) async {
   sl.registerLazySingleton(() => ToggleFavorite(sl()));
 
   // Repositories
-  sl.registerLazySingleton<VocabularyRepository>(() => VocabularyRepositoryImpl(
-        remoteDataSource: sl(),
-        firestoreDataSource: sl(),
-        connectivity: sl(),
-      ));
+  sl.registerLazySingleton<VocabularyRepository>(
+    () => VocabularyRepositoryImpl(
+      remoteDataSource: sl(),
+      firestoreDataSource: sl(),
+      connectivity: sl(),
+    ),
+  );
 
   // Data Sources
   sl.registerLazySingleton<VocabularyRemoteDataSource>(
-      () => VocabularyRemoteDataSourceImpl(dio: sl()));
+    () => VocabularyRemoteDataSourceImpl(dio: sl()),
+  );
 
   if (useMockFirebase) {
     sl.registerLazySingleton<VocabularyFirestoreDataSource>(
-        () => MockVocabularyFirestoreDataSourceImpl());
+      () => MockVocabularyFirestoreDataSourceImpl(),
+    );
   } else {
     sl.registerLazySingleton<VocabularyFirestoreDataSource>(
-        () => VocabularyFirestoreDataSourceImpl(firestore: sl()));
+      () => VocabularyFirestoreDataSourceImpl(firestore: sl()),
+    );
     sl.registerLazySingleton(() => FirebaseFirestore.instance);
   }
 
   // Core / External clients
-  final dio = Dio(BaseOptions(
-    baseUrl: _apiBaseUrl,
-    connectTimeout: const Duration(seconds: 8),
-    receiveTimeout: const Duration(seconds: 8),
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-    },
-  ));
+  final dio = Dio(
+    BaseOptions(
+      baseUrl: _apiBaseUrl,
+      connectTimeout: const Duration(seconds: 8),
+      receiveTimeout: const Duration(seconds: 8),
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+    ),
+  );
 
   // Enable request/response console logger for debugging
-  dio.interceptors.add(LogInterceptor(
-    requestBody: true,
-    responseBody: true,
-    logPrint: (obj) => debugPrint(obj.toString()),
-  ));
+  dio.interceptors.add(
+    LogInterceptor(
+      requestBody: true,
+      responseBody: true,
+      logPrint: (obj) => debugPrint(obj.toString()),
+    ),
+  );
 
   sl.registerLazySingleton(() => dio);
   sl.registerLazySingleton(() => FirebaseAnalytics.instance);
